@@ -20,16 +20,18 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::resource('user', 'UserController');
+    Route::resource('user', 'UserController');
     Route::put('user/{user}/password', 'UserController@updatePassword')->name('users.update.pass');
-	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
-	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
-	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
+    Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
+    Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
+    Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
     Route::resource('roles','RoleController');
     Route::resource('shops','BoutiqueController');
     Route::patch('slogo/{id}','BoutiqueController@updateLogo')->name('shop.update.logo');
+    Route::post('shops/inventaires','BoutiqueController@inventaireShops')->name('shops.inventaire');
     Route::get('shops/{id}/show/','BoutiqueController@showUserShops')->name('users.shops');
     Route::get('shops/{id}/stocks/','BoutiqueController@stocksUserShops')->name('stocks.shops');
+    Route::get('shops/{id}/inventaires/','BoutiqueController@inventaireUserShops')->name('inventaire.shops');
     Route::get('shops/{id}/ventes/','BoutiqueController@ventesUserShops')->name('ventes.shops');
     Route::get('shops/{id}/soldes/','BoutiqueController@soldesUserShops')->name('soldes.shops');
     Route::get('shops/{id}/sorties-magasin/','BoutiqueController@sortiesUserShops')->name('sorties.shops');
@@ -74,10 +76,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('magasins','MagasinController');
     Route::get('magasins/{id}/show/','MagasinController@showUserMagasin')->name('users.magasins');
     Route::get('magasins/{id}/stocks/','MagasinController@stocksUserMagasin')->name('stocks.magasins');
+    Route::get('magasins/{id}/inventaires/','MagasinController@inventaireUserMagasin')->name('inventaire.magasins');
     Route::get('magasins/{id}/historiques/','MagasinController@historiqueMagasin')->name('historiques.magasins');
     Route::get('magasins/{id}/entrees/','MagasinController@entreeMagasin')->name('entrees.magasins');
     Route::get('magasins/{id}/sorties-boutiques/','MagasinController@sortieBoutiqueMagasin')->name('sortie-boutique.magasins');
     Route::get('magasins/{id}/sorties-magasins/','MagasinController@sortieMagasinMagasin')->name('sortie-magasin.magasins');
+    Route::post('magasins/inventaires','MagasinController@inventaireMagasins')->name('magasins.inventaire');
     Route::resource('categories','CategorieController');
     Route::resource('produits','ProduitController');
     Route::resource('days','MagasinJourController');
@@ -119,11 +123,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //tontines
     Route::get('/jours/{id}/boutiques/tontines', 'TontineBoutiqueController@tontinesBoutique')->name('jours.boutiques.tontines');
-	Route::get('/jours/{id}/boutiques/tontines/create', 'TontineBoutiqueController@tontinesBoutiqueCreated')->name('jours.boutiques.tontines.create');
+    Route::get('/jours/{id}/boutiques/tontines/create', 'TontineBoutiqueController@tontinesBoutiqueCreated')->name('jours.boutiques.tontines.create');
     Route::get('/facture/{id}', 'VenteBoutiqueController@printFactures')->name('print.facture');
     Route::get('/factures/{id}', 'SoldeBoutiqueController@printFactures')->name('print.facture.solde');
     Route::resource('boutique-tontines','TontineBoutiqueController');
-	
+    
     //versements
     Route::get('/jours/{id}/boutiques/versements', 'VersementBoutiqueController@VersementsBoutique')->name('jours.boutiques.versements');
     Route::get('/jours/{id}/boutiques/versements/create', 'VersementBoutiqueController@VersementsBoutiqueCreated')->name('jours.boutiques.versements.create');

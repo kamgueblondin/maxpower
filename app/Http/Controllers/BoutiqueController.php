@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShopRequest;
+use App\Http\Requests\InventaireRequest;
+use App\BoutiqueHistorique;
 use App\Boutique;
 use App\BoutiqueStock;
 use App\User;
@@ -23,6 +25,7 @@ class BoutiqueController extends Controller
          $this->middleware('permission:boutique-create', ['only' => ['create','store']]);
          $this->middleware('permission:boutique-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:boutique-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:boutique-comptabilite', ['only' => ['inventaireShops','inventaireUserShops']]);
     }
     /**
      * Display a listing of the resource.
@@ -228,6 +231,17 @@ class BoutiqueController extends Controller
         return redirect()->route('home');
     }
 
+    public function inventaireUserShops($id){
+        $boutique=Boutique::find($id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+                return view('shops.shop.inventaire',compact('boutique'));
+            }
+        }
+        return redirect()->route('home');
+    }
+
     public function versementsUserShops($id){
         $boutique=Boutique::find($id);
         $boutiques=auth()->user()->boutiques;
@@ -273,6 +287,32 @@ class BoutiqueController extends Controller
                     $pdf->loadHTML($this->convert_historiqueShopsPrintsJours_data_to_html($id));
                    
                     return $pdf->stream();
+            }
+        }
+        return redirect()->route('home');
+    }
+    public function inventaireShops(InventaireRequest $request){
+        $boutique=Boutique::find($request->boutique_id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+                if($request->stocks>0){
+            DB::beginTransaction();
+            $historique=new BoutiqueHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->boutique_id=$request->boutique_id;
+            $historique->description="Inventaire";
+            $historique->entite="Inventaire";
+            $historique->save();
+            foreach ($request->stocks as $key => $stock){
+                $stock=BoutiqueStock::find($request->stocks[$key]);
+                $stock->valeur=$request->quantites[$key];
+                //$stock->initial=$stock->valeur;
+                $stock->save();
+            }
+            DB::commit();
+        }
+        return redirect()->route('stocks.shops',$request->boutique_id)->withStatus(__('Inventaires successfully created.'));
             }
         }
         return redirect()->route('home');

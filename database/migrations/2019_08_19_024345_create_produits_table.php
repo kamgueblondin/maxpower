@@ -20,6 +20,7 @@ class CreateProduitsTable extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('categorie_id')->nullable();
             $table->decimal('prix', 18, 2)->nullable();
+            $table->decimal('prix_achat', 18, 2)->nullable();
             $table->foreign('categorie_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });

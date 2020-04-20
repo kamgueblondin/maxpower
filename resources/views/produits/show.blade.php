@@ -41,8 +41,20 @@
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12">
 						<div class="form-group">
-							<strong>Prix:</strong>
+							<strong>Prix d'achat':</strong>
+							{{ $produit->prix_achat }} FCFA
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12">
+						<div class="form-group">
+							<strong>Prix de vente:</strong>
 							{{ $produit->prix }} FCFA
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12">
+						<div class="form-group">
+							<strong>Bénéfice pour le produit:</strong>
+							{{ $produit->prix-$produit->prix_achat }} FCFA
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12">
