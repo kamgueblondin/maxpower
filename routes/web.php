@@ -49,8 +49,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class);
     Route::resource('shops', BoutiqueController::class);
     Route::patch('slogo/{id}', [BoutiqueController::class, 'updateLogo'])->name('shop.update.logo');
+    Route::post('shops/inventaires', [BoutiqueController::class, 'inventaireShops'])->name('shops.inventaire');
     Route::get('shops/{id}/show/', [BoutiqueController::class, 'showUserShops'])->name('users.shops');
     Route::get('shops/{id}/stocks/', [BoutiqueController::class, 'stocksUserShops'])->name('stocks.shops');
+    Route::get('shops/{id}/inventaires/', [BoutiqueController::class, 'inventaireUserShops'])->name('inventaire.shops');
     Route::get('shops/{id}/ventes/', [BoutiqueController::class, 'ventesUserShops'])->name('ventes.shops');
     Route::get('shops/{id}/soldes/', [BoutiqueController::class, 'soldesUserShops'])->name('soldes.shops');
     Route::get('shops/{id}/sorties-magasin/', [BoutiqueController::class, 'sortiesUserShops'])->name('sorties.shops');
@@ -95,10 +97,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('magasins', MagasinController::class);
     Route::get('magasins/{id}/show/', [MagasinController::class, 'showUserMagasin'])->name('users.magasins');
     Route::get('magasins/{id}/stocks/', [MagasinController::class, 'stocksUserMagasin'])->name('stocks.magasins');
+    Route::get('magasins/{id}/inventaires/', [MagasinController::class, 'inventaireUserMagasin'])->name('inventaire.magasins');
     Route::get('magasins/{id}/historiques/', [MagasinController::class, 'historiqueMagasin'])->name('historiques.magasins');
     Route::get('magasins/{id}/entrees/', [MagasinController::class, 'entreeMagasin'])->name('entrees.magasins');
     Route::get('magasins/{id}/sorties-boutiques/', [MagasinController::class, 'sortieBoutiqueMagasin'])->name('sortie-boutique.magasins');
     Route::get('magasins/{id}/sorties-magasins/', [MagasinController::class, 'sortieMagasinMagasin'])->name('sortie-magasin.magasins');
+    Route::post('magasins/inventaires', [MagasinController::class, 'inventaireMagasins'])->name('magasins.inventaire');
     Route::resource('categories', CategorieController::class);
     Route::resource('produits', ProduitController::class);
     Route::resource('days', MagasinJourController::class);
@@ -144,7 +148,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/facture/{id}', [VenteBoutiqueController::class, 'printFactures'])->name('print.facture');
     Route::get('/factures/{id}', [SoldeBoutiqueController::class, 'printFactures'])->name('print.facture.solde');
     Route::resource('boutique-tontines', TontineBoutiqueController::class);
-	
     //versements
     Route::get('/jours/{id}/boutiques/versements', [VersementBoutiqueController::class, 'VersementsBoutique'])->name('jours.boutiques.versements');
     Route::get('/jours/{id}/boutiques/versements/create', [VersementBoutiqueController::class, 'VersementsBoutiqueCreated'])->name('jours.boutiques.versements.create');

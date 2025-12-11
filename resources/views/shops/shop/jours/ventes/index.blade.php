@@ -143,12 +143,12 @@
 						 <th>Produits</th>
 						 <th>Catégorie</th>
 						 @can('boutique-comptabilite')
-						 <th title="CMUP prix de vente -10%">CMUP Prix Vente -10%</th>
+						 <th title="CMUP prix d'achat'">Prix d'achat</th>
 						 @endcan
 						 <th>Quantité</th>
 						 <th title="prix de vente">Prix de Vente</th>
 						 @can('boutique-comptabilite')
-						 <th title="sous total CMUP prix de vente -1O%">Sous Total CMUP P.V</th>
+						 <th title="sous total CMUP prix de vente -1O%">Sous Total P.A</th>
 						 @endcan
 						 <th title="sous total prix de vente">Sous Total P.V</th>
 						 @can('boutique-comptabilite')
@@ -161,22 +161,22 @@
 		                <tbody>
 					    @php $i=0; $somme=0; $ventes=0; @endphp
 						@foreach ($jour->ventes as $key => $sortie)
-						<tr>@php $somme+=$sortie->prix * $sortie->quantite; $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite); @endphp
+						<tr>@php $somme+=$sortie->prix * $sortie->quantite; $ventes+=($sortie->prix * $sortie->quantite)-((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat)))*$sortie->quantite); @endphp
 							<td>{{ ++$i }}</td>
 							<td><a title="imprimer" data-togle="tooltip" href="{{route('print.facture',$sortie->facture->id)}}">{{ $sortie->facture->nom }}</a></td>
 							<td>{{ $sortie->stock->produit->nom }}</td>
 							<td>{{ $sortie->stock->produit->categorie->nom }}</td>
 							@can('boutique-comptabilite')
-							<td>{{ (($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)) }}  FCFA</td>
+							<td>{{ (($sortie->stock->produit->prix)-$sortie->stock->produit->prix_achat) }}  FCFA</td>
 							@endcan
 							<td>{{ $sortie->quantite }}</td>
 							<td>{{ $sortie->prix }} Fcfa</td>
 							@can('boutique-comptabilite')
-							<td>{{((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite}} Fcfa</td>
+							<td>{{((($sortie->stock->produit->prix)-($sortie->stock->produit->prix_achat)))*$sortie->quantite}} Fcfa</td>
 							@endcan
 							<td>{{ $sortie->prix * $sortie->quantite }} Fcfa</td>
 							@can('boutique-comptabilite')
-							<td>{{($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite)}} Fcfa</td>
+							<td>{{($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-($sortie->stock->produit->prix_achat)))*$sortie->quantite)}} Fcfa</td>
 							@endcan
 							<td>{{ $sortie->created_at->format('d/m/Y H:i') }}</td>
 							<td>
@@ -196,7 +196,7 @@
 										<form action="{{ route('boutique-ventes.destroy', $sortie->id) }}" method="post">
 											@csrf
 											@method('delete')
-											<button type="button" class="dropdown-item" onclick="confirm('{{ __("ête vous sûr de vouloir supprimer cette solde?") }}') ? this.parentElement.submit() : ''">
+											<button type="button" class="dropdown-item" onclick="confirm('{{ __("ête vous sûr de vouloir supprimer cette vente?") }}') ? this.parentElement.submit() : ''">
 												{{ __('Supprimer') }}
 											</button>
 										</form> 

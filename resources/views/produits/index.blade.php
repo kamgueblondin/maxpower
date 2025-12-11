@@ -62,9 +62,10 @@
 						 <th>Numéro</th>
 						 <th>Référence</th>
 						 <th>Nom</th>
-						 <th>CMUP Prix de vente -10%</th>
+						 <th>Prix d'achat</th>
 						 <th>Prix de vente</th>
 						 <th>Catégorie</th>
+						 <th>Bénéfice</th>
 						 <th width="280px">Action</th>
 					  </tr>
 					   </thead>
@@ -75,9 +76,10 @@
 							<td>{{ ++$i }}</td>
 							<td>{{ $produit->reference }}</td>
 							<td>{{ $produit->nom }}</td>
-							<td>{{ ($produit->prix)-(($produit->prix*10)/100) }}  FCFA</td>
+							<td>{{ $produit->prix_achat }}  FCFA</td>
 							<td>{{ $produit->prix }}  FCFA</td>
 							<td>{{ $produit->categorie->nom }}</td>
+							<td>{{ $produit->prix-$produit->prix_achat }} FCFA</td>
 							<td>
 								<div class="dropdown">
 									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

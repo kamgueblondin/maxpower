@@ -62,9 +62,19 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="form-group{{ $errors->has('prix_achat') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-prix_achat">{{ __('prix d\'achat') }}</label>
+                                    <input type="number" min="0" value="{{$produit->prix_achat}}" name="prix_achat" id="input-prix_achat" class="form-control form-control-alternative{{ $errors->has('prix_achat') ? ' is-invalid' : '' }}" placeholder="{{ __('Entrer le prix d\'achat') }}" value="{{ old('prix_achat') }}" required autofocus>
+
+                                    @if ($errors->has('prix_achat'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('prix_achat') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                                 <div class="form-group{{ $errors->has('prix') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-prix">{{ __('prix') }}</label>
-                                    <input type="number" min="0" value="{{$produit->prix}}" name="prix" id="input-prix" class="form-control form-control-alternative{{ $errors->has('prix') ? ' is-invalid' : '' }}" placeholder="{{ __('Entrer la prix') }}" value="{{ old('prix') }}" required autofocus>
+                                    <label class="form-control-label" for="input-prix">{{ __('prix de vente') }}</label>
+                                    <input type="number" min="0" value="{{$produit->prix}}" name="prix" id="input-prix" class="form-control form-control-alternative{{ $errors->has('prix') ? ' is-invalid' : '' }}" placeholder="{{ __('Entrer le prix de vente') }}" value="{{ old('prix') }}" required autofocus>
 
                                     @if ($errors->has('prix'))
                                         <span class="invalid-feedback" role="alert">
