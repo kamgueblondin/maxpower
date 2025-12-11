@@ -215,10 +215,10 @@ class BoutiqueJourController extends Controller
                  <th style="border: 1px solid; padding:5px; text-align: center;">Facture</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Produits</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Catégorie</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">CMUP Prix Vente -10%</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">P.A/th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Quantité</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Prix de vente</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total CMUP P.V</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.V</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Bénéfice</th>
               </tr>
@@ -226,18 +226,18 @@ class BoutiqueJourController extends Controller
         foreach($jour->ventes as $key => $sortie)
         {
             $somme+=$sortie->prix * $sortie->quantite;
-            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
-            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
+            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
+            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
             $output .= '
               <tr>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$ordre++.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->facture->nom.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->stock->produit->nom.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->stock->produit->categorie->nom .'</td>
-              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)).'  FCFA</td>
+              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))).'  FCFA</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->quantite.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix.' Fcfa</td>
-              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite.' Fcfa</td>
+              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix * $sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$benefice.' Fcfa</td>
               </tr>
@@ -283,10 +283,10 @@ class BoutiqueJourController extends Controller
                  <th style="border: 1px solid; padding:5px; text-align: center;">Facture</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Produits</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Catégorie</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">CMUP Prix Vente -10%</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Quantité</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Prix de vente</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total CMUP P.V</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.V</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Bénéfice</th>
               </tr>
@@ -294,18 +294,18 @@ class BoutiqueJourController extends Controller
         foreach($jour->soldes as $key => $sortie)
         {
             $somme+=$sortie->prix * $sortie->quantite;
-            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
-            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
+            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
+            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
             $output .= '
               <tr>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$ordre++.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->facture->nom.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->stock->produit->nom.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->stock->produit->categorie->nom .'</td>
-              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)).'  FCFA</td>
+              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))).'  FCFA</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->quantite.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix.' Fcfa</td>
-              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite.' Fcfa</td>
+              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix * $sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$benefice.' Fcfa</td>
               </tr>
@@ -686,10 +686,10 @@ class BoutiqueJourController extends Controller
                  <th style="border: 1px solid; padding:5px; text-align: center;">Facture</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Produits</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Catégorie</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">CMUP Prix Vente -10%</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Quantité</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Prix de vente</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total CMUP P.V</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.V</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Bénéfice</th>
               </tr>
@@ -697,18 +697,18 @@ class BoutiqueJourController extends Controller
         foreach($jour->ventes as $key => $sortie)
         {
             $somme+=$sortie->prix * $sortie->quantite;
-            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
-            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
+            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
+            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
             $output .= '
               <tr>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$ordre++.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->facture->nom.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->stock->produit->nom.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->stock->produit->categorie->nom .'</td>
-              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)).'  FCFA</td>
+              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))).'  FCFA</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->quantite.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix.' Fcfa</td>
-              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite.' Fcfa</td>
+              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix * $sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$benefice.' Fcfa</td>
               </tr>
@@ -731,10 +731,10 @@ class BoutiqueJourController extends Controller
                  <th style="border: 1px solid; padding:5px; text-align: center;">Facture</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Produits</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Catégorie</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">CMUP Prix Vente -10%</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">CMUP P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Quantité</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Prix de vente</th>
-                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total CMUP P.V</th>
+                 <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.A</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Sous Total P.V</th>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Bénéfice</th>
               </tr>
@@ -742,18 +742,18 @@ class BoutiqueJourController extends Controller
         foreach($jour->soldes as $key => $sortie)
         {
             $somme+=$sortie->prix * $sortie->quantite;
-            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
-            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite);
+            $ventes+=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
+            $benefice=($sortie->prix * $sortie->quantite)-(((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite);
             $output .= '
               <tr>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$ordre++.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->facture->nom.'</td>
               <td style="border: 1px solid; padding:5px; text-align: center;">'.$sortie->stock->produit->nom.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->stock->produit->categorie->nom .'</td>
-              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)).'  FCFA</td>
+              <td style="border: 1px solid; padding:5px;">'.(($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))).'  FCFA</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->quantite.'</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix.' Fcfa</td>
-              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix*10)/100)))*$sortie->quantite.' Fcfa</td>
+              <td style="border: 1px solid; padding:5px;">'.((($sortie->stock->produit->prix)-(($sortie->stock->produit->prix_achat))))*$sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$sortie->prix * $sortie->quantite.' Fcfa</td>
               <td style="border: 1px solid; padding:5px;">'.$benefice.' Fcfa</td>
               </tr>

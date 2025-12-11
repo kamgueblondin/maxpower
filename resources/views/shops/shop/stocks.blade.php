@@ -43,12 +43,13 @@
 	        </nav>
 	    </div>
 	        <div class="col-lg-6 col-5 text-right">
-	        	@can('boutique-comptabilite')
-	            <a href="{{ route('stocks.shops.print.jours',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Imprimer</a>
-	            @can('boutique-inventaire-list')
-				<a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaires</a>
-	            @endcan
-				<a href="" class="btn btn-sm btn-neutral mt-1 d-xl-none" class="btn btn-primary" data-toggle="modal" data-target="#menu">plus</a>
+                @can('boutique-comptabilite')
+                <a href="{{ route('stocks.shops.print.jours',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Imprimer</a>
+                @can('boutique-inventaire-list')
+                <a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaires</a>
+                @endcan
+                <a href="{{ route('inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaire</a>
+                <a href="" class="btn btn-sm btn-neutral mt-1 d-xl-none" class="btn btn-primary" data-toggle="modal" data-target="#menu">plus</a>
 	            <div class="modal" id="menu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">
@@ -63,11 +64,12 @@
 				        <li class="list-group-item">
 				        <a href="{{ route('stocks.shops.print.jours',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Imprimer</a>
 	            		</li>
-	            		<li class="list-group-item">
-						@can('boutique-inventaire-list')
-	            		<a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
-	            		@endcan
-						</li>
+                        <li class="list-group-item">
+                        @can('boutique-inventaire-list')
+                        <a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
+                        @endcan
+                        <a href="{{ route('inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaire</a>
+                        </li>
 						</ul>
 				      </div>
 				    </div>

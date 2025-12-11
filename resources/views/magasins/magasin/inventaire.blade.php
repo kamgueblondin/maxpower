@@ -40,9 +40,10 @@
                                 <h3 class="mb-0">{{ __('Gestion des Inventaires') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-								@can('magasin-inventaire-list')
+                                @can('magasin-inventaire-list')
                                 <a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-primary">{{ __('Retour') }}</a>
-								@endcan
+                                @endcan
+                                <a href="{{ route('stocks.magasins',$magasin->id) }}" class="btn btn-sm btn-primary">{{ __('Retours au stocks') }}</a>
                             </div>
                         </div>
                     </div>

@@ -43,11 +43,12 @@
 	        </nav>
 	    </div>
 	    <div class="col-lg-6 col-5 text-right">
-	    	@can('magasin-comptabilite')
-	            <a href="{{ route('stocks.magasins.print',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Imprimer</a>
-	            @can('magasin-inventaire-list')
+        	@can('magasin-comptabilite')
+            	<a href="{{ route('stocks.magasins.print',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Imprimer</a>
+            	@can('magasin-inventaire-list')
 				<a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaires</a>
-	            @endcan
+            	@endcan
+				<a href="{{ route('inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaire</a>
 				<a href="" class="btn btn-sm btn-neutral mt-1 d-xl-none" class="btn btn-primary" data-toggle="modal" data-target="#menu">plus</a>
 	            <div class="modal" id="menu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
@@ -64,10 +65,11 @@
 				        <a href="{{ route('stocks.magasins.print',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Imprimer</a>
 				        </li>
 				        <li class="list-group-item">
-						@can('magasin-inventaire-list')
-				        <a href="{{ route('inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
-				        @endcan
-						</li>
+                        @can('magasin-inventaire-list')
+                        <a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
+                        @endcan
+                        <a href="{{ route('inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaire</a>
+                        </li>
 						</ul>
 				      </div>
 				    </div>
@@ -122,15 +124,15 @@
 							 <th>Catégorie</th>
 							 <th>Stocks initial</th>
 							 <th>Stocks réel</th>
-							 @can('magasin-comptabilite')<th>Prix d'achat</th>
-							 <th>Prix de vente</th>
-							 <th>Variation</th>
-							 <th>Bénéfice</th>
-						 	 <th>S.I * P.A</th>
-						 	 <th>S.R * P.A</th>
-						  	 <th>S.I * P.V</th>
-						 	 <th>S.R * P.V</th>@endcan
-							 <th>Action</th>
+                             @can('magasin-comptabilite')<th>Prix d'achat</th>
+                             <th>Prix de vente</th>
+                             <th>Vendus</th>
+                             <th>Bénéfice</th>
+                         	 <th>S.I * P.A</th>
+                         	 <th>S.R * P.A</th>
+                         	 	 <th>S.I * P.V</th>
+                         	 	 <th>S.R * P.V</th>@endcan
+                             <th>Action</th>
 						  </tr>
 						  </thead>
 		                <tbody>
@@ -164,16 +166,16 @@
 							<td>{{ $stock->valeur*$stock->produit->prix_achat }}</td>
 							<td>{{ $stock->initial*$stock->produit->prix }}</td>
 							<td>{{ $stock->valeur*$stock->produit->prix }}</td>@endcan
-							<td>
-								<div class="dropdown">
-									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<i class="fas fa-ellipsis-v"></i>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
-									</div>
-								</div>
-							</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        <a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+                                    </div>
+                                </div>
+                            </td>
 						</tr>
 						@else
 						<tr class="text-red">
@@ -191,16 +193,16 @@
 							<td>{{ $stock->valeur*$stock->produit->prix_achat }}</td>
 							<td>{{ $stock->initial*$stock->produit->prix }}</td>
 							<td>{{ $stock->valeur*$stock->produit->prix }}</td>@endcan
-							<td>
-								<div class="dropdown">
-									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<i class="fas fa-ellipsis-v"></i>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
-									</div>
-								</div>
-							</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        <a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+                                    </div>
+                                </div>
+                            </td>
 						</tr>
 						@endif
 						@endforeach
@@ -219,16 +221,16 @@
 							<td>{{ $spaI }}</td>
 							<td>{{ $spvR }}</td>
 							<td>{{ $spvI }}</td>@endcan
-							<td>
-								<div class="dropdown">
-									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<i class="fas fa-ellipsis-v"></i>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
-									</div>
-								</div>
-							</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        <a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+                                    </div>
+                                </div>
+                            </td>
 						</tr>
 					</tbody>
 					</table>

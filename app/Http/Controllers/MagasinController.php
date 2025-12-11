@@ -165,7 +165,6 @@ class MagasinController extends Controller
         }
         return redirect()->route('home');
     }
-
     public function inventaireViewUserMagasin($id){
         $magasin=Magasin::find($id);
         $magasins=auth()->user()->magasins;
@@ -176,7 +175,6 @@ class MagasinController extends Controller
         }
         return redirect()->route('home');
     }
-    
     public function historiqueMagasin($id){
         $magasin=Magasin::find($id);
         $magasins=auth()->user()->magasins;
@@ -227,6 +225,32 @@ class MagasinController extends Controller
                     $pdf->loadHTML($this->convert_historiqueShopsPrintsJours_data_to_html($id));
                    
                     return $pdf->stream();
+            }
+        }
+        return redirect()->route('home');
+    }
+    public function inventaireMagasins(InventaireRequest $request){
+        $magasin=Magasin::find($request->magasin_id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                if($request->stocks>0){
+            DB::beginTransaction();
+            $historique=new MagasinHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->magasin_id=$request->magasin_id;
+            $historique->description="Inventaire";
+            $historique->entite="Inventaire";
+            $historique->save();
+            foreach ($request->stocks as $key => $stock){
+                $stock=MagasinStock::find($request->stocks[$key]);
+                $stock->valeur=$request->quantites[$key];
+                //$stock->initial=$stock->valeur;
+                $stock->save();
+            }
+            DB::commit();
+        }
+        return redirect()->route('stocks.magasins',$request->magasin_id)->withStatus(__('Inventaires successfully created.'));
             }
         }
         return redirect()->route('home');

@@ -33,6 +33,9 @@ class ProduitRequest extends FormRequest
             'prix' => [
                 'required', 'min:0'
             ],
+            'prix_achat' => [
+                'required', 'min:0'
+            ],
         ];
     }
 }

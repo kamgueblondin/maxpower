@@ -138,7 +138,9 @@
 	                                <a href="{{ route('jours.actionc',$jour->id) }}" class="btn btn-sm btn-primary mt-1" onclick="return confirm('Etes vous sure de vouloir Boucler la journée ?')">{{ __('Boucler la journée') }}</a>
 	                            @endcan
 	                            @else
+	                            	@can('boutique-comptabilite')
 	                                <a href="{{ route('journal.shops.print',$jour->id) }}" class="btn btn-sm btn-primary mt-1">{{ __('Imprimer le journal') }}</a>
+	                                @endcan
 	                            @can('boutique-jour-open')
 	                                <a href="{{ route('jours.actiono',$jour->id) }}" class="btn btn-sm btn-primary mt-1" onclick="return confirm('Etes vous sure de vouloir Déblocker la journée ?')">{{ __('Déblocker la journée') }}</a>
 	                            @endcan

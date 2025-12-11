@@ -124,6 +124,7 @@ class ProduitController extends Controller
         $produit->reference=$request->reference;
         $produit->nom=$request->nom;
         $produit->description=$request->description;
+        $produit->prix_achat=$request->prix_achat;
         $produit->prix=$request->prix;
         $produit->categorie_id=$request->categorie_id;
         $produit->save();
