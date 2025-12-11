@@ -243,17 +243,6 @@ class BoutiqueController extends Controller
         return redirect()->route('home');
     }
 
-    public function inventaireUserShops($id){
-        $boutique=Boutique::find($id);
-        $boutiques=auth()->user()->boutiques;
-        foreach ($boutiques as $b) {
-            if($b->id==$boutique->id){
-                return view('shops.shop.inventaire',compact('boutique'));
-            }
-        }
-        return redirect()->route('home');
-    }
-
     public function versementsUserShops($id){
         $boutique=Boutique::find($id);
         $boutiques=auth()->user()->boutiques;
