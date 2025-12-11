@@ -162,7 +162,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 		Spatie\Permission\PermissionServiceProvider::class,
-        browner12\helpers\HelperServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
