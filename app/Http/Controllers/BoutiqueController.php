@@ -303,32 +303,7 @@ class BoutiqueController extends Controller
         }
         return redirect()->route('home');
     }
-    public function inventaireShops(InventaireRequest $request){
-        $boutique=Boutique::find($request->boutique_id);
-        $boutiques=auth()->user()->boutiques;
-        foreach ($boutiques as $b) {
-            if($b->id==$boutique->id){
-                if($request->stocks>0){
-            DB::beginTransaction();
-            $historique=new BoutiqueHistorique;
-            $historique->user_id=auth()->user()->getId();
-            $historique->boutique_id=$request->boutique_id;
-            $historique->description="Inventaire";
-            $historique->entite="Inventaire";
-            $historique->save();
-            foreach ($request->stocks as $key => $stock){
-                $stock=BoutiqueStock::find($request->stocks[$key]);
-                $stock->valeur=$request->quantites[$key];
-                //$stock->initial=$stock->valeur;
-                $stock->save();
-            }
-            DB::commit();
-        }
-        return redirect()->route('stocks.shops',$request->boutique_id)->withStatus(__('Inventaires successfully created.'));
-            }
-        }
-        return redirect()->route('home');
-    }
+    
     /**
      * @return string
      */
