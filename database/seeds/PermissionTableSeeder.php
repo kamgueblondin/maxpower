@@ -95,7 +95,9 @@ class PermissionTableSeeder extends Seeder
            'magasin-boutique-sortie-list',
            'magasin-boutique-sortie-create',
            'magasin-boutique-sortie-edit',
-           'magasin-boutique-sortie-delete'
+           'magasin-boutique-sortie-delete',
+           'boutique-inventaire-list',
+           'magasin-inventaire-list'
         ];
 
 

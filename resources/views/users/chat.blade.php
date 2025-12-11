@@ -95,7 +95,7 @@
                                     <tbody id="contacts-list" style="color:white;">
                                 @foreach($contacts as $contact)
                                 <tr><td>
-                                <a style="color: black;" href="/messages/{{$contact->id}}">
+                                <a style="color: black;" href="{{ asset('/messages') }}/{{$contact->id}}">
                                     <li class="">
                                     <div class="avatar"><span class="mif-user icon"></span></div>
                                     <div class="contact">
@@ -197,7 +197,7 @@
     				if (e.keyCode == 13) {
     					e.preventDefault();
     					$.post(
-    						'/messages',
+    						'{{ asset('/messages') }}',
     						{
     							contenu : $("#contenu").val(),
 

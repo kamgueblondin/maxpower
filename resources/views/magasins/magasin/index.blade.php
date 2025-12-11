@@ -44,6 +44,9 @@
 	        @can('magasin-historiques-list')
 	        <a href="{{ route('historiques.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Historiques</a>
 	        @endcan
+			@can('magasin-inventaire-list')
+	        <a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaires</a>
+	        @endcan
 	    </div>
 	        <div class="col-lg-6 col-5 text-right">
 	        	@can('magasin-entree-list')
@@ -94,6 +97,11 @@
 						  	 @can('magasin-magasin-sortie-list')
 					            <a href="{{route('sortie-magasin.magasins',$magasin->id)}}" class="btn btn-sm btn-neutral">Sorties vers Magasins</a>
 					          @endcan
+						  </li>
+						  <li class="list-group-item">
+						  	@can('magasin-inventaire-list')
+				            <a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral">Inventaires</a>
+				            @endcan
 						  </li>
 						  <li class="list-group-item">
 						  	@can('magasin-stocks-list')

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MagasinStock extends Model
 {
     protected $fillable = [
-        'produit_id', 'magasin_id',  'initial', 'valeur',
+        'produit_id', 'magasin_id',  'initial', 'valeur','avant_inventaire','apres_inventaire',
     ];
 	public function magasin()
     {

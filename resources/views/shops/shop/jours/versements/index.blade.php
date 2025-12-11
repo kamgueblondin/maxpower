@@ -176,6 +176,7 @@
 						</tr>
 						@endforeach
 					</tbody>
+						<tfoot><tr><th colspan="4">Montant total  :</th><td colspan="3"><b>{{ $jour->versements->sum('montant') }} Fcfa</b></td></tr></tfoot>
 					</table>
                 
                    </div>

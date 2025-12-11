@@ -128,6 +128,7 @@
 						</tr>
 						@endforeach
 						</tbody>
+						<tfoot><tr><th colspan="3">Montant total  :</th><td colspan="2"><b>{{ $boutique->charges->sum('montant') }} Fcfa</b></td></tr></tfoot>
 					</table>
                 
                    </div>

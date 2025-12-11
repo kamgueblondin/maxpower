@@ -43,6 +43,9 @@
 				            @can('boutique-historiques-list')
 					        <a href="{{route('historiques.shops',$boutique->id)}}" class="btn btn-sm btn-neutral mt-1">Historiques</a>
 					        @endcan
+							@can('boutique-inventaire-list')
+					        <a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
+					        @endcan
 				        </nav>
 				    </div>
 			        <div class="col-lg-6 col-5 text-right">
@@ -130,6 +133,11 @@
 								  <li class="list-group-item">
 								   @can('boutique-historiques-list')
 							        <a href="{{route('historiques.shops',$boutique->id)}}" class="btn btn-sm btn-neutral mt-1">Historiques</a>
+							       @endcan
+								  </li>
+								  <li class="list-group-item">
+								   @can('boutique-inventaire-list')
+							        <a href="{{ route('view.inventaire.shops',$boutique->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
 							       @endcan
 								  </li>
 								</ul>

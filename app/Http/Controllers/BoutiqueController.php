@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShopRequest;
+use App\Http\Requests\InventaireRequest;
+use App\BoutiqueHistorique;
 use App\Boutique;
 use App\BoutiqueStock;
 use App\User;
@@ -23,6 +25,8 @@ class BoutiqueController extends Controller
          $this->middleware('permission:boutique-create', ['only' => ['create','store']]);
          $this->middleware('permission:boutique-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:boutique-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:boutique-inventaire-list', ['only' => ['inventaireViewShops','avantInventaireUserShops','apresInventaireUserShops']]);
+         $this->middleware('permission:boutique-comptabilite', ['only' => ['inventaireShops','inventaireUserShops']]);
     }
     /**
      * Display a listing of the resource.
@@ -168,6 +172,17 @@ class BoutiqueController extends Controller
         foreach ($boutiques as $b) {
             if($b->id==$boutique->id){
                 return view('shops.shop.stocks',compact('boutique'));
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function inventaireViewShops($id){
+        $boutique=Boutique::find($id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+                return view('shops.shop.inventaire-view',compact('boutique'));
             }
         }
         return redirect()->route('home');
@@ -762,5 +777,97 @@ class BoutiqueController extends Controller
         }}
         $output .= '</table>';
         return $output;
+    }
+
+    public function avantInventaireUserShops($id){
+        $boutique=Boutique::find($id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+            DB::beginTransaction();
+            $historique=new BoutiqueHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->boutique_id=$id;
+            $historique->description="Stocks en machine avant comptage et Stocks trouvés après comptage à zéro";
+            $historique->entite="Inventaire";
+            $historique->save();
+            foreach ($boutique->stocks as $stock){
+                $stock->avant_inventaire=null;
+                $stock->apres_inventaire=null;
+                $stock->save();
+            }
+            DB::commit();
+            return redirect()->route('view.inventaire.shops',$id)->withStatus(__('Reseted Successfully.'));
+            }
+        }
+        return redirect()->route('home');
+    }
+	
+	
+	public function inventaireShops(InventaireRequest $request){
+        $boutique=Boutique::find($request->boutique_id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+                if($request->stocks>0){
+            DB::beginTransaction();
+            $historique=new BoutiqueHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->boutique_id=$request->boutique_id;
+            $historique->description="Inventaire";
+            $historique->entite="Inventaire";
+            $historique->save();
+            foreach ($request->stocks as $key => $stock){
+                $stock=BoutiqueStock::find($request->stocks[$key]);
+                $stock->avant_inventaire=$stock->valeur;
+                $stock->apres_inventaire=$request->quantites[$key];
+                $stock->valeur=$request->quantites[$key];
+                //$stock->initial=$stock->valeur;
+                $stock->save();
+            }
+            DB::commit();
+        }
+        return redirect()->route('view.inventaire.shops',$request->boutique_id)->withStatus(__('Inventaires successfully created.'));
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function apresInventaireUserShops($id){
+        $boutique=Boutique::find($id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+            DB::beginTransaction();
+            $historique=new BoutiqueHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->boutique_id=$id;
+            $historique->description="Adapter les stocks réels en fonction des Stocks trouvés après comptage saisies en réduisant à zéro";
+            $historique->entite="Inventaire";
+            $historique->save();
+            foreach ($boutique->stocks as $stock){
+                if($stock->apres_inventaire==null || $stock->apres_inventaire==0){
+                    $stock->avant_inventaire=$stock->valeur;
+                    $stock->apres_inventaire=0;
+                    $stock->valeur=0;
+                    $stock->save();
+                }
+            }
+            DB::commit();
+            return redirect()->route('view.inventaire.shops',$id)->withStatus(__('Adapter Successfully.'));
+            }
+        }
+        return redirect()->route('home');
+    }
+	
+	public function inventaireUserShops($id){
+        $boutique=Boutique::find($id);
+        $boutiques=auth()->user()->boutiques;
+        foreach ($boutiques as $b) {
+            if($b->id==$boutique->id){
+                return view('shops.shop.inventaire',compact('boutique'));
+            }
+        }
+        return redirect()->route('home');
     }
 }

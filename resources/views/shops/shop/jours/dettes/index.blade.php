@@ -196,6 +196,7 @@
 						</tr>
 						@endforeach
 					</tbody>
+						<tfoot><tr><th colspan="4">Montant total  :</th><td colspan="4"><b>{{ $jour->dettes->sum('montant') }} Fcfa</b></td></tr></tfoot>
 					</table>
                 
                    </div>

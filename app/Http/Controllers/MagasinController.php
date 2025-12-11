@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Http\Requests\MagasinRequest;
+use App\Http\Requests\InventaireRequest;
 use App\Boutique;
 use App\Magasin;
 use App\MagasinStock;
+use App\MagasinHistorique;
 use App\Produit;
 use App\User;
 use Illuminate\Http\Request;
 use DB;
+
 
 class MagasinController extends Controller
 {
@@ -24,6 +28,8 @@ class MagasinController extends Controller
          $this->middleware('permission:magasin-create', ['only' => ['create','store']]);
          $this->middleware('permission:magasin-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:magasin-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:magasin-inventaire-list', ['only' => ['inventaireViewUserMagasin','avantInventaireUserMagasin','apresInventaireUserMagasin']]);
+         $this->middleware('permission:magasin-comptabilite', ['only' => ['inventaireMagasins','inventaireUserMagasin']]);
     }
     /**
      * Display a listing of the resource.
@@ -159,6 +165,18 @@ class MagasinController extends Controller
         }
         return redirect()->route('home');
     }
+
+    public function inventaireViewUserMagasin($id){
+        $magasin=Magasin::find($id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                return view('magasins.magasin.inventaire-view',compact('magasin'));
+            }
+        }
+        return redirect()->route('home');
+    }
+    
     public function historiqueMagasin($id){
         $magasin=Magasin::find($id);
         $magasins=auth()->user()->magasins;
@@ -318,15 +336,13 @@ class MagasinController extends Controller
     /**
      * @return string
      */
-    function convert_stocksMagasinsPrints_data_to_html($id)
-    {
+    function convert_stocksMagasinsPrints_data_to_html($id){
 
         $magasin=Magasin::find($id);
         
         $nbre_code = $magasin->count();
         $ordre = 1;
-        $output ='
-            <h3 align="center">Le stocks du magasin '.$magasin->nom.' '.$magasin->localisation.'</h3>
+        $output = '<h3 align="center">Le stocks du magasin '.$magasin->nom.' '.$magasin->localisation.'</h3>
             <table width="100%" style="border-collapse: collapse; border: 0px;">
              <tr>
                  <th style="border: 1px solid; padding:5px; text-align: center;">Numéro</th>
@@ -476,4 +492,136 @@ class MagasinController extends Controller
         $output .= '</table>';
         return $output;
     }
+
+    public function stocksMagasinEvolution(int $magasinId,int $produitId,Request $request){
+		$maintenant = Carbon::now();
+        $start= !empty($request->debut)  ?   $request->debut: "2019-02-01";
+        $stop=  !empty($request->fin) ? $request->fin : $maintenant->toDateString();
+        $entrees= collect();
+        $sortieBoutiques=collect();
+        $sortieMagasins=collect();
+        $magasin=Magasin::find($magasinId);
+        $magasins=auth()->user()->magasins;
+        $produit=Produit::findOrFail($produitId);
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                $entreesBrut=$magasin->entrees->whereBetween('created_at', [$start, $stop]);
+                foreach ($entreesBrut as $entree){
+                    if ($entree->stock->produit->id==$produit->id){
+                        $entrees->push($entree);
+                    }
+                }
+                $sortieBoutiquesBrut=$magasin->sortieBoutiques->whereBetween('created_at', [$start, $stop]);
+                foreach ($sortieBoutiquesBrut as $sortie){
+                    if ($sortie->stock->produit->id==$produit->id){
+                        $sortieBoutiques->push($sortie);
+                    }
+                }
+                $sortieMagasinsBrut=$magasin->sortieMagasins->whereBetween('created_at', [$start, $stop]);
+                foreach ($sortieMagasinsBrut as $sortie){
+                    if ($sortie->stock->produit->id==$produit->id){
+                        $sortieMagasins->push($sortie);
+                    }
+                }
+                return view('magasins.magasin.evolution',compact('start','stop','entrees','sortieBoutiques','sortieMagasins','magasin','produit'));
+            }
+        }
+        return redirect()->route('home');
+    }
+    public function inventaireUserMagasin($id){
+        $magasin=Magasin::find($id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                return view('magasins.magasin.inventaire',compact('magasin'));
+            }
+        }
+        return redirect()->route('home');
+    }
+	public function inventaireMagasins(InventaireRequest $request){
+        $magasin=Magasin::find($request->magasin_id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                if($request->stocks>0){
+            DB::beginTransaction();
+            $historique=new MagasinHistorique;
+            $historique->user_id=auth()->user()->getId();
+            $historique->magasin_id=$request->magasin_id;
+            $historique->description="Inventaire";
+            $historique->entite="Inventaire";
+            $historique->save();
+			
+			
+            foreach ($request->stocks as $key => $stock){
+                $stock=MagasinStock::find($request->stocks[$key]);
+                $stock->avant_inventaire=$stock->valeur;
+                $stock->apres_inventaire=$request->quantites[$key];
+                $stock->valeur=$request->quantites[$key];
+                //$stock->initial=$stock->valeur;
+                $stock->save();
+            }
+            DB::commit();
+        }
+        return redirect()->route('view.inventaire.magasins',$request->magasin_id)->withStatus(__('Inventaires successfully created.'));
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function avantInventaireUserMagasin($id){
+        $magasin=Magasin::find($id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                DB::beginTransaction();
+                $historique=new MagasinHistorique;
+                $historique->user_id=auth()->user()->getId();
+                $historique->magasin_id=$id;
+                $historique->description="Stocks en machine avant comptage et Stocks trouvés après comptage à zéro";
+                $historique->entite="Inventaire";
+                $historique->save();
+                
+                
+                foreach ($magasin->stocks as $stock){
+                    $stock->avant_inventaire=null;
+                    $stock->apres_inventaire=null;
+                    $stock->save();
+                }
+                DB::commit();
+                return redirect()->route('view.inventaire.magasins',$id)->withStatus(__('Reseted successfully.'));
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function apresInventaireUserMagasin($id){
+        $magasin=Magasin::find($id);
+        $magasins=auth()->user()->magasins;
+        foreach ($magasins as $m) {
+            if($m->id==$magasin->id){
+                DB::beginTransaction();
+                $historique=new MagasinHistorique;
+                $historique->user_id=auth()->user()->getId();
+                $historique->magasin_id=$id;
+                $historique->description="Adapter les stocks réels en fonction des Stocks trouvés après comptage saisies en réduisant à zéro";
+                $historique->entite="Inventaire";
+                $historique->save();
+                
+                
+                foreach ($magasin->stocks as $stock){
+                    if($stock->apres_inventaire==null || $stock->apres_inventaire==0){
+                        $stock->avant_inventaire=$stock->valeur;
+                        $stock->apres_inventaire=0;
+                        $stock->valeur=0;
+                        $stock->save();
+                    }
+                }
+                DB::commit();
+                return redirect()->route('view.inventaire.magasins',$id)->withStatus(__('Adapter successfully.'));
+            }
+        }
+        return redirect()->route('home');
+    }
 }
+

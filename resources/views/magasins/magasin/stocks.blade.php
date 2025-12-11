@@ -45,7 +45,10 @@
 	    <div class="col-lg-6 col-5 text-right">
 	    	@can('magasin-comptabilite')
 	            <a href="{{ route('stocks.magasins.print',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Imprimer</a>
-	            <a href="" class="btn btn-sm btn-neutral mt-1 d-xl-none" class="btn btn-primary" data-toggle="modal" data-target="#menu">plus</a>
+	            @can('magasin-inventaire-list')
+				<a href="{{ route('view.inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1 d-none d-sm-none d-md-none d-lg-none d-xl-inline-flex">Inventaires</a>
+	            @endcan
+				<a href="" class="btn btn-sm btn-neutral mt-1 d-xl-none" class="btn btn-primary" data-toggle="modal" data-target="#menu">plus</a>
 	            <div class="modal" id="menu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">
@@ -59,6 +62,12 @@
 				        <ul class="list-group text-center">
 				        <li class="list-group-item">
 				        <a href="{{ route('stocks.magasins.print',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Imprimer</a>
+				        </li>
+				        <li class="list-group-item">
+						@can('magasin-inventaire-list')
+				        <a href="{{ route('inventaire.magasins',$magasin->id) }}" class="btn btn-sm btn-neutral mt-1">Inventaires</a>
+				        @endcan
+						</li>
 						</ul>
 				      </div>
 				    </div>
@@ -113,12 +122,32 @@
 							 <th>Catégorie</th>
 							 <th>Stocks initial</th>
 							 <th>Stocks réel</th>
-							 <th>Prix</th>
+							 @can('magasin-comptabilite')<th>Prix d'achat</th>
+							 <th>Prix de vente</th>
+							 <th>Variation</th>
+							 <th>Bénéfice</th>
+						 	 <th>S.I * P.A</th>
+						 	 <th>S.R * P.A</th>
+						  	 <th>S.I * P.V</th>
+						 	 <th>S.R * P.V</th>@endcan
+							 <th>Action</th>
 						  </tr>
 						  </thead>
 		                <tbody>
-					    @php $i=0; @endphp
+					    @php $i=0; $spvI=0;$spvR=0;$spaI=0;$spaR=0;$tb=0;$sV=0;$tpv=0;$tpc=0;$ti=0;$tr=0; 
+					    @endphp
 						@foreach ($magasin->stocks as $key => $stock)
+						@php $spvI+=$stock->valeur*$stock->produit->prix;
+						$spvR+=$stock->initial*$stock->produit->prix;
+						$spaI+=$stock->valeur*$stock->produit->prix_achat;
+						$spaR+=$stock->initial*$stock->produit->prix_achat;
+						$tb+=($stock->initial-$stock->valeur) * ($stock->produit->prix-$stock->produit->prix_achat);
+						$sV+=$stock->initial-$stock->valeur;
+						$tpv+=$stock->produit->prix;
+						$tpc+=$stock->produit->prix_achat;
+						$ti+=$stock->valeur;
+						$tr+=$stock->initial;
+						@endphp
 						@if( $stock->valeur>(20*$stock->initial)/100 )
 						<tr>
 							<td>{{ ++$i }}</td>
@@ -127,7 +156,24 @@
 							<td>{{ $stock->produit->categorie->nom }}</td>
 							<td>{{ $stock->initial }}</td>
 							<td>{{ $stock->valeur }}</td>
+							@can('boutique-comptabilite')<td>{{ $stock->produit->prix_achat }} FCFA</td>
 							<td>{{ $stock->produit->prix }} FCFA</td>
+							<td>{{ $stock->initial-$stock->valeur }}</td>
+							<td>{{ ($stock->initial-$stock->valeur) * ($stock->produit->prix-$stock->produit->prix_achat)}}</td>
+							<td>{{ $stock->initial*$stock->produit->prix_achat }}</td>
+							<td>{{ $stock->valeur*$stock->produit->prix_achat }}</td>
+							<td>{{ $stock->initial*$stock->produit->prix }}</td>
+							<td>{{ $stock->valeur*$stock->produit->prix }}</td>@endcan
+							<td>
+								<div class="dropdown">
+									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fas fa-ellipsis-v"></i>
+									</a>
+									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+									</div>
+								</div>
+							</td>
 						</tr>
 						@else
 						<tr class="text-red">
@@ -137,10 +183,53 @@
 							<td>{{ $stock->produit->categorie->nom }}</td>
 							<td>{{ $stock->initial }}</td>
 							<td>{{ $stock->valeur }}</td>
+							@can('boutique-comptabilite')<td>{{ $stock->produit->prix_achat }} FCFA</td>
 							<td>{{ $stock->produit->prix }} FCFA</td>
+						 	<td>{{ $stock->initial-$stock->valeur }}</td>
+						 	<td>{{ ($stock->initial-$stock->valeur) * ($stock->produit->prix-$stock->produit->prix_achat)}}</td>
+						 	<td>{{ $stock->initial*$stock->produit->prix_achat }}</td>
+							<td>{{ $stock->valeur*$stock->produit->prix_achat }}</td>
+							<td>{{ $stock->initial*$stock->produit->prix }}</td>
+							<td>{{ $stock->valeur*$stock->produit->prix }}</td>@endcan
+							<td>
+								<div class="dropdown">
+									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fas fa-ellipsis-v"></i>
+									</a>
+									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+									</div>
+								</div>
+							</td>
 						</tr>
 						@endif
 						@endforeach
+						<tr>
+							<td>{{ ++$i }}</td>
+							<td></td>
+							<td></td>
+							<td>Total</td>
+							<td>{{ $tr }}</td>
+							<td>{{ $ti }}</td>
+							@can('boutique-comptabilite')<td>{{ $tpc }} FCFA</td>
+							<td>{{ $tpv }} FCFA</td>
+						 	<td>{{ $sV }}</td>
+						 	<td>{{ ($tb)}}</td>
+						 	<td>{{ $spaR }}</td>
+							<td>{{ $spaI }}</td>
+							<td>{{ $spvR }}</td>
+							<td>{{ $spvI }}</td>@endcan
+							<td>
+								<div class="dropdown">
+									<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fas fa-ellipsis-v"></i>
+									</a>
+									<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+										<a class="dropdown-item" href="{{ route('shops.show.evolution',[$magasin->id,$stock->produit->id]) }}">{{ __('Voir les Transactions') }}</a>
+									</div>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 					</table>
 

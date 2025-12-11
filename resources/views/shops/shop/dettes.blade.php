@@ -147,6 +147,7 @@
 						</tr>
 						@endforeach
 					</tbody>
+						<tfoot><tr><th colspan="4">Montant total  :</th><td colspan="3"><b>{{ $boutique->dettes->sum('montant') }} Fcfa</b></td></tr></tfoot>
 					</table>
                 
                    </div>

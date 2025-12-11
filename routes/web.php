@@ -28,6 +28,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles','RoleController');
     Route::resource('shops','BoutiqueController');
     Route::patch('slogo/{id}','BoutiqueController@updateLogo')->name('shop.update.logo');
+    Route::post('shops/inventaires','BoutiqueController@inventaireShops')->name('shops.inventaire');
+    Route::get('shops/{id}/inventaires/avant','BoutiqueController@avantInventaireUserShops')->name('avant.inventaire.shops');
+    Route::get('shops/{id}/inventaires/apres','BoutiqueController@apresInventaireUserShops')->name('apres.inventaire.shops');
+    Route::get('shops/{id}/inventaires/','BoutiqueController@inventaireUserShops')->name('inventaire.shops');
+    Route::get('shops/{id}/inventaires/view','BoutiqueController@inventaireViewShops')->name('view.inventaire.shops');
     Route::get('shops/{id}/show/','BoutiqueController@showUserShops')->name('users.shops');
     Route::get('shops/{id}/stocks/','BoutiqueController@stocksUserShops')->name('stocks.shops');
     Route::get('shops/{id}/ventes/','BoutiqueController@ventesUserShops')->name('ventes.shops');
@@ -72,10 +77,16 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::resource('magasins','MagasinController');
+    Route::get('magasin/{magasinId}/evolution/{produtuitId}','MagasinController@stocksMagasinEvolution')->name('shops.show.evolution');
     Route::get('magasins/{id}/show/','MagasinController@showUserMagasin')->name('users.magasins');
     Route::get('magasins/{id}/stocks/','MagasinController@stocksUserMagasin')->name('stocks.magasins');
     Route::get('magasins/{id}/historiques/','MagasinController@historiqueMagasin')->name('historiques.magasins');
     Route::get('magasins/{id}/entrees/','MagasinController@entreeMagasin')->name('entrees.magasins');
+    Route::get('magasins/{id}/inventaires/','MagasinController@inventaireUserMagasin')->name('inventaire.magasins');
+    Route::get('magasins/{id}/inventaires/avant','MagasinController@avantInventaireUserMagasin')->name('avant.inventaire.magasins');
+    Route::get('magasins/{id}/inventaires/apres','MagasinController@apresInventaireUserMagasin')->name('apres.inventaire.magasins');
+    Route::get('magasins/{id}/view/inventaires/','MagasinController@inventaireViewUserMagasin')->name('view.inventaire.magasins');
+	Route::post('magasins/inventaires','MagasinController@inventaireMagasins')->name('magasins.inventaire');
     Route::get('magasins/{id}/sorties-boutiques/','MagasinController@sortieBoutiqueMagasin')->name('sortie-boutique.magasins');
     Route::get('magasins/{id}/sorties-magasins/','MagasinController@sortieMagasinMagasin')->name('sortie-magasin.magasins');
     Route::resource('categories','CategorieController');
